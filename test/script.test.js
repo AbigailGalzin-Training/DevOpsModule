@@ -1,21 +1,24 @@
+const { setCounter } = require('../src/script');
 
-
-// Prueba unitaria para verificar la función setCounter
-test('increase the counter', () => {
-    let count = 0;
-    const setCounter = require('../src/script');
-
-    setCounter.mockImplementation(a => {
-        count = 1;
+describe('Counter test', () => {
+    beforeEach(() => {        
+        document.body.innerHTML = `
+            <div class="container">
+                <p id="count">0</p>
+            </div>
+        `;
     });
 
-    setCounter(1);
-    expect(count).toBe(1);
-});
+    test('increase the counter', () => {
+        setCounter(1);
+        const countDisplay = document.getElementById('count');
+        expect(countDisplay.textContent).toBe('1');
+    });
+    
+    test('reset the counter', () => {
+        setCounter(0);
+        const countDisplay = document.getElementById('count');
+        expect(countDisplay.textContent).toBe('0');
+    });
 
-test('reset the counter', () => {
-    let count = 0;
-
-    setCounter(0);
-    expect(count).toBe(0);
 });
