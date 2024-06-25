@@ -1,6 +1,3 @@
-const countDisplay = document.getElementById('count');
-const incrementButton = document.getElementById('incrementButton');
-
 let count = 0;
 
 function setCounter(value) {
@@ -9,7 +6,10 @@ function setCounter(value) {
     } else {
         count += value;
     }
-    
+    const countDisplay = document.getElementById('count');
     countDisplay.textContent = count;
 }
 
+module.exports = {
+    setCounter
+};
