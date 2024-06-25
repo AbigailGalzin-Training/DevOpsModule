@@ -6,10 +6,6 @@ on:
       - main  # Aquí especifica la rama principal de tu repositorio
       - develop
 
-runs:
-  using: 'node20'
-  main: 'app.js'
-
 jobs:
   build:
     runs-on: ubuntu-latest
