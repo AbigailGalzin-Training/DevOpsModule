@@ -1,3 +1,5 @@
+/* globals describe, expect, beforeEach, test */ 
+{ describe, beforeEach, test, expect } require('jest');
 const { setCounter } = require('../src/script');
 
 describe('Counter test', () => {
