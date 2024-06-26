@@ -24,7 +24,7 @@ jobs:
     
     - name: Run test
       run: npm run test
-      
+
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
       with:
@@ -37,13 +37,13 @@ jobs:
         install_components: kubectl
 
     - name: Configure docker for GCR
-      run: gcloud auth configure-docker
+      run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
     - name: Build Docker image
-      run: docker build -t gcr.io/${{ secrets.GCLOUD_PROJECT }}/counter-app:latest .
+      run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT }}/counter-app:latest .
 
     - name: Push Docker image
-      run: docker push gcr.io/${{ secrets.GCLOUD_PROJECT }}/counter-app:latest
+      run: docker push us-central1-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT }}/counter-app:latest
 
     - name: Deploy to Kubernetes
       env:
