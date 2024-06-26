@@ -40,10 +40,10 @@ jobs:
       run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
     - name: Build Docker image
-      run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT }}/counter-app:latest .
+      run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT }}/counter-app/counter-app:latest .
 
     - name: Push Docker image
-      run: docker push us-central1-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT }}/counter-app:latest
+      run: docker push us-central1-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT }}/counter-app/counter-app:latest
 
     - name: Deploy to Kubernetes
       env:
@@ -52,3 +52,4 @@ jobs:
         gcloud container clusters get-credentials autopilot-cluster-counter-1 --region us-central1
         kubectl apply -f deployment.yaml
         kubectl apply -f service.yaml
+
