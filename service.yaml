@@ -1,19 +1,12 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
-  name: counter-app
+  name: counter-app-service
 spec:
-  replicas: 1
   selector:
-    matchLabels:
-      app: counter-app
-  template:
-    metadata:
-      labels:
-        app: counter-app
-    spec:
-      containers:
-      - name: counter-app
-        image: gcr.io/counter-427614/counter-app:latest
-        ports:
-        - containerPort: 3000
+    app: counter-app
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: 80
+  type: LoadBalancer

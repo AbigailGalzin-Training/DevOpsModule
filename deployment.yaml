@@ -1,12 +1,21 @@
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: counter-app-service
+  name: counter-app
 spec:
-  type: LoadBalancer
+  replicas: 1
   selector:
-    app: counter-app
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 3000
+    matchLabels:
+      app: counter-app
+  template:
+    metadata:
+      labels:
+        app: counter-app
+    spec:
+      containers:
+      - name: counter-app
+        image: us-central1-docker.pkg.dev/counter-427614/counter-app/counter-app:latest
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: artifact-registry-secret
