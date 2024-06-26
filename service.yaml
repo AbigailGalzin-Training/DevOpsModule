@@ -3,6 +3,7 @@ kind: Service
 metadata:
   name: counter-app-service
 spec:
+  type: LoadBalancer
   selector:
     app: counter-app
   ports:
