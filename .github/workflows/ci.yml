@@ -37,11 +37,30 @@ jobs:
         source: "counter-app:latest"
         target: "~/counter-app:latest"
     
-    - name: Deploy application
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} << 'EOF'
-          docker stop counter-app || true
-          docker rm counter-app || true
-          docker pull counter-app:latest
-          docker run -d -p 3000:3000 --name counter-app counter-app:latest
-EOF
+     - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCLOUD_SA_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT }}
+          install_components: kubectl
+
+      - name: Configure docker for GCR
+        run: gcloud auth configure-docker
+
+      - name: Build Docker image
+        run: docker build -t gcr.io/${{ secrets.GCLOUD_PROJECT }}/counter-app:latest .
+
+      - name: Push Docker image
+        run: docker push gcr.io/${{ secrets.GCLOUD_PROJECT }}/counter-app:latest
+
+      - name: Deploy to Kubernetes
+        env:
+          KUBECONFIG: ${{ runner.temp }}/kubeconfig
+        run: |
+          gcloud container clusters get-credentials autopilot-cluster-counter-1 --region us-central1
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
