@@ -24,3 +24,24 @@ jobs:
     
     - name: Run test
       run: npm run test
+
+    - name: Build Docker image
+      run: docker build -t counter-app:latest .
+    
+    - name: Push Docker image to remote server
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ secrets.REMOTE_HOST }}
+        username: ${{ secrets.REMOTE_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        source: "counter-app:latest"
+        target: "~/counter-app:latest"
+    
+    - name: Deploy application
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} << 'EOF'
+          docker stop counter-app || true
+          docker rm counter-app || true
+          docker pull counter-app:latest
+          docker run -d -p 3000:3000 --name counter-app counter-app:latest
+EOF
